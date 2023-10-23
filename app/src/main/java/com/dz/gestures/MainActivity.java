@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /// TODO : END APP WHEN IT GOES TO BACKGROUND
+    /// TODO : We look for top visible app which is this and kill it
     private void endProcess(){
         ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         if(am != null) {
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /// TODO : We look for current visible app and kill it by its packageName
     @SuppressLint("NewApi")
     private void killApp(){
         ActivityManager  manager = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
