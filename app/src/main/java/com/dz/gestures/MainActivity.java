@@ -15,20 +15,22 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String status = "foreground";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        // TODO : Register broadcast receiver
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(new PowerButtonReceiver(),intentFilter);
+//        // TODO : Register broadcast receiver
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+//        registerReceiver(new PowerButtonReceiver(),intentFilter);
     }
 
 
@@ -36,19 +38,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        endProcess();
+       // endProcess();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        endProcess();
+    protected void onResume() {
+        super.onResume();
+        if(Objects.equals(status, "background")){
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            status = "foreground";
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        endProcess();
+        status = "background";
     }
 
     /// TODO : END APP WHEN IT GOES TO BACKGROUND
