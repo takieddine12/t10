@@ -2,6 +2,7 @@ package com.dz.gestures;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -11,14 +12,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
+
 
     private String status = "foreground";
     @Override
@@ -31,9 +38,44 @@ public class MainActivity extends AppCompatActivity {
 //        IntentFilter intentFilter = new IntentFilter();
 //        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 //        registerReceiver(new PowerButtonReceiver(),intentFilter);
+
+        Button button = findViewById(R.id.mode);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Objects.equals(Extras.getTheme(MainActivity.this), "light")) {
+                    setDarkMode();
+                } else {
+                    setLightMode();
+                }
+            }
+        });
+
+
+        if (Objects.equals(Extras.getTheme(this), "light")) {
+            setLightMode();
+        } else {
+            setDarkMode();
+        }
     }
 
 
+    private void setDarkMode() {
+        Extras.setTheme(this, "dark");
+        applyTheme(AppCompatDelegate.MODE_NIGHT_YES, Color.LTGRAY);
+    }
+
+    private void setLightMode() {
+        Extras.setTheme(this, "light");
+        applyTheme(AppCompatDelegate.MODE_NIGHT_NO, Color.DKGRAY);
+    }
+
+    private void applyTheme(int nightMode, int statusBarColor) {
+        AppCompatDelegate.setDefaultNightMode(nightMode);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(statusBarColor);
+    }
 
     @Override
     public void onBackPressed() {
@@ -95,4 +137,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
