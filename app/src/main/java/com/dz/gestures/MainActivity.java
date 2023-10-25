@@ -1,10 +1,12 @@
 package com.dz.gestures;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +14,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String status = "foreground";
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,42 +44,25 @@ public class MainActivity extends AppCompatActivity {
 //        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 //        registerReceiver(new PowerButtonReceiver(),intentFilter);
 
-        Button button = findViewById(R.id.mode);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Objects.equals(Extras.getTheme(MainActivity.this), "light")) {
-                    setDarkMode();
-                } else {
-                    setLightMode();
-                }
-            }
-        });
 
-
-        if (Objects.equals(Extras.getTheme(this), "light")) {
-            setLightMode();
-        } else {
+        if(isDarkTheme()){
             setDarkMode();
+        } else {
+            setLightMode();
         }
+
+
     }
 
-
+    private boolean isDarkTheme() {
+        int uiMode = getResources().getConfiguration().uiMode;
+        return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    }
     private void setDarkMode() {
-        Extras.setTheme(this, "dark");
-        applyTheme(AppCompatDelegate.MODE_NIGHT_YES, Color.LTGRAY);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
-
     private void setLightMode() {
-        Extras.setTheme(this, "light");
-        applyTheme(AppCompatDelegate.MODE_NIGHT_NO, Color.DKGRAY);
-    }
-
-    private void applyTheme(int nightMode, int statusBarColor) {
-        AppCompatDelegate.setDefaultNightMode(nightMode);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(statusBarColor);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
     @Override
@@ -137,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
 }
