@@ -4,6 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
 //        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 //        registerReceiver(new PowerButtonReceiver(),intentFilter);
 
-
         if(isDarkTheme()){
-            setDarkMode();
+            Toast.makeText(MainActivity.this,"Mode is dark",Toast.LENGTH_SHORT).show();
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
-            setLightMode();
+            Toast.makeText(MainActivity.this,"Mode is light",Toast.LENGTH_SHORT).show();
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
 
 
     }
@@ -58,13 +66,10 @@ public class MainActivity extends AppCompatActivity {
         int uiMode = getResources().getConfiguration().uiMode;
         return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
-    private void setDarkMode() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    }
-    private void setLightMode() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-    }
 
+
+
+    /////////////////////////////////////////////////////////// BACKGROUND / FOREGROUND
     @Override
     public void onBackPressed() {
         super.onBackPressed();
